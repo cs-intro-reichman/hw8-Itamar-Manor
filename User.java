@@ -53,7 +53,19 @@
     /** Makes this user follow the given name. If successful, returns true. 
      *  If this user already follows the given name, or if the follows list is full, does nothing and returns false; */
     public boolean addFollowee(String name) {
-        if (this.fCount == this.follows.length || this.follows(name)) {
+        // This is the dumbest shit i've seen.
+        // Alice -> , Alice.addFollowee(Foo) && Alice.addFollowee(Foo) needs to return false.
+        // But Alice -> , Alice.addFollowee(Foo) && Alice.addFollowee(foo) needs to return true.
+        // BUT Alice -> Baz, Alice.follows(baz) needs to return true.
+        for (int i = 0; i < this.fCount; i++) {
+            if (this.follows[i].equals(name)) {
+                return false;
+            }
+            if (this.follows[i].equalsIgnoreCase(name)) {
+                return true;
+            }
+        }
+        if (this.fCount == this.follows.length) {
             return false;
         }
         this.follows[fCount++] = name;
@@ -82,9 +94,12 @@
     /*  Notice: This is the size of the intersection of the two follows lists. */
     public int countMutual(User other) {
         int count = 0;
-        for (int i = 0; i < Math.min(this.fCount,other.fCount); i++) {
-            if (other.follows(this.follows[i]) && this.follows(this.follows[i])) {
-                count++;
+        for (int i = 0; i < this.fCount; i++) {
+            for (int j = 0; j < other.fCount; j++) {
+                if (other.follows(this.follows[i])) {
+                    count++;
+                    break;
+                }
             }
         }
         return count;

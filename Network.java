@@ -64,9 +64,12 @@ public class Network {
      * or if the "follows" addition failed for some reason, returns false.
      */
     public boolean addFollowee(String name1, String name2) {
+        if (name1 == null || name2 == null) {
+            return false;
+        }
         User user1 = this.getUser(name1);
         User user2 = this.getUser(name2);
-        if (user1 == null || user2 == null) {
+        if (user1 == null || user2 == null || name1 == name2) {
             return false;
         }
         boolean result = user1.addFollowee(name2);
@@ -110,7 +113,11 @@ public class Network {
             int count = followeeCount(this.users[i].getName());
             if (count > maxCount) {
                 mostPopularUser = this.users[i];
+                maxCount = count;
             }
+        }
+        if (mostPopularUser == null) {
+            return null;
         }
         return mostPopularUser.getName();
     }
@@ -134,9 +141,9 @@ public class Network {
     // follow.
     public String toString() {
         String output = "";
-        output += "Network:\n";
+        output += "Network:";
         for (int i = 0; i < this.userCount; i++) {
-            output += this.users[i] + "\n";
+            output += "\n" + this.users[i];
         }
         return output;
     }
