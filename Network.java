@@ -34,7 +34,7 @@ public class Network {
      */
     public User getUser(String name) {
         for (int i = 0; i < this.userCount; i++) {
-            if (name.equals(this.users[i].getName())) {
+            if (name.equalsIgnoreCase(this.users[i].getName())) {
                 return this.users[i];
             }
         }
@@ -87,7 +87,7 @@ public class Network {
         User maxUser = null;
         int maxMutual = -1;
         for (int i = 0; i < this.userCount; i++) {
-            if (this.users[i].getName().equals(user.getName())) {
+            if (this.users[i].getName().equalsIgnoreCase(user.getName())) {
                 continue;
             }
             int currMutual = user.countMutual(this.users[i]);
